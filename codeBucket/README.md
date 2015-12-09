@@ -11,7 +11,7 @@ scrapy
 
 ## 获取小组帖子列表
 
-在当前目录执行：```scrapy crawl groupspider```
+在```tutorial```目录执行：```scrapy crawl groupspider```
 
 帖子列表会在CLI中打印，尚未写入文件中。测试时注意查看。
 
