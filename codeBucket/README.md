@@ -16,7 +16,10 @@ scrapy
 帖子列表会在CLI中打印，尚未写入文件中。测试时注意查看。
 
 
-##特定帖子中的内容转Markdown格式
+##帖子内容转Markdown格式
 
-以帖子http://www.douban.com/group/topic/79588017/ 为例，将楼主的回复转为Markdown格式，写入test.md中。
-测试命令为：```scrapy crawl testspider```
+在```tutorial```目录下新建一个```topic```目录，然后执行如下命令：
+
+```scrapy crawl testspider```
+
+在topic目录下，以topic id作为文件名，生成小组内所有帖子的md文件
