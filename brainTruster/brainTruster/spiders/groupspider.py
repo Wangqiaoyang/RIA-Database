@@ -13,41 +13,25 @@ class GroupSpider(scrapy.Spider):
     "http://www.douban.com/group/562894/discussion"
     ]
     
-    discussion = []
+    discussion_list = []
     
-    def makelist(self, table):
-    	result = []
-    	allrows = table.findAll('tr')
-    	for row in allrows:
-    		result.append([])
-    		allcols = row.findAll('td')
-    		tmp = allcols[0].findAll('a')
-    		if tmp:
-    			href = tmp[0].get("href")
-    			title = tmp[0].get("title")
-    			result[-1].append(href)
-    			result[-1].append(title)
-    	return result
     
     def parse(self, response):
         sel=Selector(response)
-        tables = sel.xpath('//*[@id="content"]/div/div[1]/div[2]/table').extract()
-        for table in tables:
-        	html = table.encode("utf8")
-        	soup = BeautifulSoup.BeautifulSoup(html)
-        	for item in self.makelist(soup.findAll('table')[0]):
-        		if item == []:
-        			continue
-        		self.discussion.append(item[0])
-        
-        nextlink = sel.xpath('//*[@id="content"]/div/div[1]/div[3]/span[3]/link').extract()
+        rows = sel.xpath('//*[@class="olt"]/tr')
+        for row in rows:
+        	discuss_title = row.xpath('.//*[@class="title"]/a/text()').extract()
+        	discuss_title_href = row.xpath('.//*[@class="title"]/a/@href').extract()
+        	if discuss_title_href:
+        		self.discussion_list.append(discuss_title_href[0])
+                
+        nextlink = sel.xpath('//*[@class="next"]/a/@href').extract()
         if nextlink :
-        	soup = BeautifulSoup.BeautifulSoup(nextlink[0])
-        	next = soup.findAll('link')[0].get("href")
-        	yield scrapy.Request(response.urljoin(next),callback=self.parse)
+        	link = nextlink[0]
+        	yield scrapy.Request(response.urljoin(link),callback=self.parse)
         else:
         	file = open('discussion_list.txt', 'wb')
-        	for url in self.discussion:
+        	for url in self.discussion_list:
         		file.write(url+"\n")
         	file.close()
         
