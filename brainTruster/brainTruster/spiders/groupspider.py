@@ -42,36 +42,43 @@ class GroupSpider(scrapy.Spider):
         	for discussion in self.discussion_list:
         		yield scrapy.Request(response.urljoin(discussion),callback=self.parse_discussion)
     
+    
     def parse_discussion(self, response):
     	filename = self.topic_path + "/topic_"+response.url.split('/')[-2]
     	sel=Selector(response)
     	
-    	title = self.handle_title(sel.xpath('//*[@id="content"]/h1/text()').extract())
+    	title = self.handle_title(sel)
+    	
     	from_user = self.handle_fromuser(sel)
     	
-    	
     	reply_docs = self.handle_comments(sel.xpath('//*[@class="reply-doc content"]'))
-    	a = sel.xpath('//*[@id="link-report"]/div[1]').extract()[0]
+    	
     	file = open(filename+'.md', 'wb')
-    	h = html2text.HTML2Text()
-    	text =  h.handle(a)
     	file.write(title.encode("utf8") + "\n---\n")
     	file.write(from_user.encode("utf8"))
-    	file.write(text.encode("utf8"))
     	for reply in reply_docs:
     		file.write(reply.encode("utf8"))
     	file.close()
     
+    
     def handle_fromuser(self, sel):
-    	from_user = sel.xpath('//*[@class="topic-doc"]/h3/span[1]/a/text()').extract()[0]
-    	from_user_href = sel.xpath('//*[@class="topic-doc"]/h3/span[1]/a/@href').extract()[0]
-    	pubtime = sel.xpath('//*[@class="topic-doc"]/h3/span[2]/text()').extract()[0]
-    	result =  "###" + "[" + from_user + "]" + "(" + from_user_href + ")" + "\t" + pubtime + "\n"
+    	from_user = sel.xpath('//*[@class="topic-doc"]/h3/span[1]/a/text()').extract()
+    	from_user_href = sel.xpath('//*[@class="topic-doc"]/h3/span[1]/a/@href').extract()
+    	pubtime = sel.xpath('//*[@class="topic-doc"]/h3/span[2]/text()').extract()
+    	body = sel.xpath('//*[@id="link-report"]/div[1]').extract()
+    	result = "###" + \
+    			"[" + from_user[0] + "]" + \
+    			"(" + from_user_href[0] + ")" + \
+    			"\t" + pubtime[0] + "\n\n" + \
+    			html2text.HTML2Text().handle(body[0]) + "\n"
     	return result
     
-    def handle_title(self, list):
+    
+    def handle_title(self, sel):
+    	list = sel.xpath('//*[@id="content"]/h1/text()').extract()
     	headline = list[0].strip('\n').lstrip(' ')
     	return "#" + headline
+    
     
     def handle_comments(self, comments):
     	replys = []
