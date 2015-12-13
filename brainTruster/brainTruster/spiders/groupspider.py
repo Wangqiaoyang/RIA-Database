@@ -13,7 +13,7 @@ class GroupSpider(scrapy.Spider):
     "http://www.douban.com/group/562894/discussion"
     ]
     
-    discussion_list = []
+    discussion_list = {}
     
     topic_path = 'topic'
     
@@ -24,7 +24,7 @@ class GroupSpider(scrapy.Spider):
         	discuss_title = row.xpath('.//*[@class="title"]/a/text()').extract()
         	discuss_title_href = row.xpath('.//*[@class="title"]/a/@href').extract()
         	if discuss_title_href:
-        		self.discussion_list.append(discuss_title_href[0])
+        		self.discussion_list[discuss_title[0]] = discuss_title_href[0]
 		
 		# check if there is next page.
         nextlink = sel.xpath('//*[@class="next"]/a/@href').extract()
@@ -33,13 +33,16 @@ class GroupSpider(scrapy.Spider):
         	# get url of next page, and call parse to process it.
         	yield scrapy.Request(response.urljoin(link),callback=self.parse)
         else:
+        
+        	self.generate_for_summary()
         	# all discussion topics have been crawled. start to process every topic.
         	# make sure the path to store topic markdown file exist.
         	if not os.path.exists(self.topic_path):
         		msg = "\n\nERROR: Directory %s doesn't exit. Please check it again.\n" 
         		sys.exit(msg % self.topic_path)
-        		
-        	for discussion in self.discussion_list:
+        	
+        	links = self.discussion_list.values()
+        	for discussion in links:
         		yield scrapy.Request(response.urljoin(discussion),callback=self.parse_discussion)
     
     
@@ -90,4 +93,17 @@ class GroupSpider(scrapy.Spider):
     		title = "---\n###" + "[" + username + "]" + "(" + herf + ")" + "\t" + pubtime + "\n"
     		replys.append(title + reply)
     	return replys
+    	
+    	
+    def generate_for_summary(self):
+    	dict = self.discussion_list
+    	titles = dict.keys()[:]
+    	titles.sort()
+    	summary = open('list.md', 'wb')
+    	for title in titles:
+    		link = dict.get(title)
+    		title = "[%s]" % title.encode("utf8")
+    		link = "(%s/topic_%s.md)\n\n" % (self.topic_path, link.split('/')[-2].encode("utf8"))
+    		summary.write(title + link)
+    	summary.close()
         
