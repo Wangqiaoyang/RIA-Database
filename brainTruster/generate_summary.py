@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 
-topic_path = '../topic'
+topic_path = 'topic'
 
 items = []
 chapters = []

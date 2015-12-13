@@ -103,7 +103,7 @@ class GroupSpider(scrapy.Spider):
     	for title in titles:
     		link = dict.get(title)
     		title = "[%s]" % title.encode("utf8")
-    		link = "(%s/topic_%s.md)\n\n" % (self.topic_path, link.split('/')[-2].encode("utf8"))
+    		link = "(%s/topic_%s.md)\n\n" % ('topic', link.split('/')[-2].encode("utf8"))
     		summary.write(title + link)
     	summary.close()
         
