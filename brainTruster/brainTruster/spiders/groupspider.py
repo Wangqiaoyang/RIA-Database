@@ -15,7 +15,7 @@ class GroupSpider(scrapy.Spider):
     
     discussion_list = {}
     
-    topic_path = 'topic'
+    topic_path = '../topic'
     
     def parse(self, response):
     	sel=Selector(response)

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 
-topic_path = 'topic'
+topic_path = '../topic'
 
 items = []
 chapters = []
-content = open("SUMMARY.md", 'wb')
+content = open("../SUMMARY.md", 'wb')
 summary = open('list.md', 'r')
 for line in summary.readlines():
 	if line == '\n':
