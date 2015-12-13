@@ -28,7 +28,10 @@ NEWSPIDER_MODULE = 'brainTruster.spiders'
 # The download delay setting will honor only one of:
 #CONCURRENT_REQUESTS_PER_DOMAIN=16
 #CONCURRENT_REQUESTS_PER_IP=16
-
+DOWNLOAD_DELAY=2
+RANDOMIZE_DOWNLOAD_DELAY=True
+USER_AGENT='Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.5 (KHTML, like Gecko) Chrome/19.0.1084.54 Safari/536.5'
+COOKIES_ENABLED = True
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED=False
 
