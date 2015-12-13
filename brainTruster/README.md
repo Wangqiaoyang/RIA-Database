@@ -10,7 +10,7 @@ scrapy
 
 ## 运行
 
-默认在`brainTruster/topic`路径下存放每个帖子的`Markdown`文件，因此需要手动创建这个目录。如果需要重定义路径，修改`groupspider.py`中的`topic_path`变量即可。
+默认在当前路径的`topic`目录下存放每个帖子的`Markdown`文件，因此需要手动创建这个目录。如果需要重定义路径，修改`groupspider.py`中的`topic_path`变量即可。
 
 运行方法：
 
