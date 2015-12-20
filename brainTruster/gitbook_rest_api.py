@@ -5,6 +5,7 @@ import urllib2, base64, json
 
 
 def call_rest_api_of_gitbook(path):
+	# http://ecommerce.shopify.com/c/shopify-apps/t/python-authentication-27662
 	# Basic Auth. 
 	# https://developer.gitbook.com/authentication/basic.html
 	basic_url = 'https://api.gitbook.com/'
